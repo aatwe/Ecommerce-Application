@@ -1,0 +1,209 @@
+Objective: What done? fetched products and its categories to home page
+
+
+
+a.1) Use bootstrap compoentn: list-group
+
+<ul class="list-group">
+  <li class="list-group-item">Cras justo odio</li>
+  <li class="list-group-item">Dapibus ac facilisis in</li>
+  <li class="list-group-item">Morbi leo risus</li>
+  <li class="list-group-item">Porta ac consectetur ac</li>
+  <li class="list-group-item">Vestibulum at eros</li>
+</ul>
+
+
+a.2) Use this to dynm
+	<%
+			for (Category c : clist) {
+				out.println(c.getCategoryTitle()+"(br>");
+			}
+		%>		
+
+		<a href="#"  class="1ist-group-item list-group-item-action"><§= c.getCategoryTitle()
+
+
+a.3) Add CSS
+.admin .card:hover{
+background:#e2e2e2;
+cursor: pointer;
+}
+
+
+.list-group-item.active{
+
+background:#673ab7!important;
+border-color:#673ab7!important;
+}
+
+
+a.4) Designing products
+	a.4.1) create row, create big col
+	
+	a.4.2) create card-columns from bootstrap
+
+	a.4.3) loop products in card-column
+		<div class="card-columns">
+			<!—-traversing products-—>
+		<%
+			for(Product pzlist){
+		%>
+	
+
+<h1>Number of products is <%= list.size()%></h1>
+<%
+for (Product product : list) {
+out.println(product.getpPhoto() + "(br>");
+out.println(product.getpName() + "(br>(br>");
+}
+%>
+
+<div class="card">
+	<div class="card-body">
+		<h5 class="card-title"><%= p.getpName() %></h5>
+
+	</div>
+
+//Product names printed in card using getpName()
+
+
+
+
+a.5) Create product description in card
+
+<div class="card">
+	<div class="card-body">
+		<h5 class="card-title"><%= p.getpName() %></h5>
+
+	<p class="card-text">
+		<%= p.getpDesc() %>
+
+	</p>
+
+	</div>
+
+//Product names and description printed in card using getpName()
+
+//how to view some description only?
+	a.5.1) com.learn.mycart.helper
+
+	Create Helper class
+
+
+	a.5.2) Create Helper.java
+	package com.learn.mycart.helper;
+	public class Helper {
+		public static String get10Words(String desc)
+			{
+				String[] strs = desc.split(" ");		//read about split(" ") method
+				if(strs.1ength>10)
+				{
+
+					String res="";
+					for(int i=0;i(10;i++)
+						{
+							res=res+strs[i]+ " ";
+						}
+						return (res+"...");
+				}else
+				{
+					return (desc+"...");
+				}
+			}
+	}
+	
+	a.5.3) Use get10Words method in index.jsp, pass getpDesc() into it 
+
+	<div class="card">
+	<div class="card-body">
+		<h5 class="card-title"><%= p.getpName() %></h5>
+
+	<p class="card-text">
+		<%= Helper.get10Words(p.getpDesc) %>
+
+	</p>
+
+	</div>
+
+	a.5.4)
+	
+
+	a.5.4) Create card footer with card buttons and show price near that 	//change color//rupee symbol html code
+		
+
+
+	<div class="card-footer"> }
+	<button class="btn custom-bg teXt-white"> Add to Cart</button>
+	<button class="btn btn-outline-primary "> &#8377 <%= p.getpPrice() %> </button>	
+
+	</div>
+
+	a.5.5) How to show photo in bootstreap?
+	//in bootstrap -> Card -> photo
+	//specify source path:: img/products/dynamically p.getPhoto()
+
+<div class="card">
+
+div class="container text-center">
+	<img src="img/products/<%= p.getpPhoto() %>" style="max-height: 200px; max-width: 100%;width: auto; " class="card-img—top m-2" alt="...">	
+ </div>
+<div class="card—body">
+
+	<h5 class="card—title"><%= p.getpName() %></h5>
+
+	<p class="card—text">
+			<%= Helper.get10Words(p.getpDesc()) %>
+	</p>
+
+</div>
+</div> 
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+
+
+
+<div class="row">
+
+<%
+	ProductDao gag=new ProductDao(FactoryProvider.getFactory());
+	List<Product> list =hao.getAllProducts();
+%>
+
+
+<!——show categories——>
+	<div class="col-md-2">
+		<!-—show categories-->
+			<div class="col-md-2">
+		
+		<div class="list-group">
+			<a href='#' class="list-group-item-action action"
+			  All products
+			</a>
+		</div>
+
+		<%
+			for (Category c : clist) {
+				out.println(c.getCategoryTitle()+"(br>");
+			}
+		%>		
+
+		<a href="#"  class="1ist-group-item list-group-item-action"><§= c.getCategoryTitle()
+
+	</div>
+
+
+<!-—show products-->
+<div c1ass="col-md-8">
+	<%
+
+	<h1>Number of products is <%= list.size() %></hl>
+	<%
+	   for(Product productlist)
+		{
+		  out.println(product.getpName() +"<br>") ;
+		} 
+	%>
+</div>
+
+< / div>

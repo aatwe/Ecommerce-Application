@@ -1,0 +1,168 @@
+How to protect admin.jsp and normal.jsp
+
+
+
+a) Objective: unless user logged in -> cant access admin.jsp
+
+
+a.1) Add java code in scriptlet
+
+a.2) logic: how to check if user logged in? httpSession : should have user as "current-user"
+		if user not logged in (null) --> stop access to page	//return
+		how to send user back to login page? response.sendRedirect("login.jsp");
+		
+			
+	if and else //if both skipped -> show page
+		
+a.3) Test:
+	login as normal user: -> submit -> This is normal user panel
+		if user tries to access directly admin.jsp 
+			-> You are not admin! dont access this page
+
+	login as admin -> This is admin panel page 
+		
+
+a.4) As admin panel page loads -> have to remove login and register button from render
+
+How to remove components/buttons in navbar on condition? Conditional rendering in navbar
+
+
+	a.4.1) fetch user data
+			scriptlet -> java
+
+	a.4.2) if user not logged in ->print login and register button
+			else if user is logged in -> show user1.getUserName() and Logou button instead
+			also href username button to #!
+				hred logout button to LogoutServlet
+			
+		 
+	a.4.3) Create LogoutServlet ->
+			getSession -> store in httpSession
+			.removeAttribute what key ?"current-user"
+			after logging out redirect to login.jsp
+
+	
+
+_________________________________________________________________________________________________
+admin.jsp
+<%page import="com.learn.mycart.entities.User"%>
+
+<%
+	User user1 = (User) session.getAttribute("current-user");
+%>
+
+
+	User user = (User)session.getAttribute("current-user");		//what contains? all login details of user
+	if(user==null) {
+
+		session.setAttribute("message", "you are not logged in!! login first");
+		response.sendRedirect("login.jsp");
+		return;
+
+}else {
+
+	if(user.getUserType().equals("normal")) 
+	{
+		session.setAttribute("message", "You are not admin! you cant access this page");
+		response.sendRedirect("login.jsp");
+
+		return;
+	}
+}
+
+%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+(html)
+<head>
+(meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Admin Panel </title>
+<%@ include file="components/common_css_js.jsp" %>
+</head>
+<body>
+	<%@ include file="components/navbar.jsp" %>
+	<h1>This is admin panel page(/h1>
+
+</body>
+(/html>
+------------------------------------------------------------------------------------------------------------
+navbar.jsp
+
+
+<nav class="navbar navbar-expand-lg navbar-dark custom-bg">
+<div class="container">
+<a class="navbar-brand" hreF="index.jsp">MyCart(/a>
+(button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportec
+(span class="navbar-toggler—icon">(/span>
+(/button> ‘
+(div class="collapse navbar-collapse" id="navbarSupportedContent">
+(ul class="navbar-nav mr-auto">
+(li class="nav-itemjfctive"> ‘
+<a class="nav-link" hreF="index.jsp">Home (span class="sr-only">(current)(/span>(/a>
+</li>
+<1i class="nav-item dropdown">
+<a class="nav-link dropdown-toggle" hreF="#" id="navbarDropdown" role="button" data-1
+Categories
+</a> \
+<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+<a class="dropdown-item" hreF="#">Action(/a> '
+<a class="dropdown-item" hreF="#">Another action(/a>
+<div class="dropdown-divider">(/div>
+<a class="dropdown—item" hreF="#">Something else here(/a>
+</div>
+</li>
+</ul>
+
+
+
+ul class="navbar-nav ml—auto">
+
+	<%
+	if(user1==null)
+	{
+	%>
+	<li class="nav-item active">
+	  <a class="nav—l%pk" hreF="login.jsp">Login (/a>
+	</li>
+	
+	<1i class="nav—item active">
+	  <a class="nav-link" hreF="register.jsp">Register (/a>
+	</1i>
+
+
+	<%		
+
+	}else
+	{
+	<li class="nav-item active">
+	  <a class="nav—link" href="#!"><% user1.getUserName()%> (/a>
+	</li>
+	
+	<1i class="nav—item active">
+	  <a class="nav-link" hreF="LogoutServlet">Logout(/a>
+
+	</1i>
+
+	}
+	%>
+
+
+</ul>
+</div>
+</div>
+</nav>
+
+-----------------------------------------------------------------------------------------------
+LogoutServlet.java
+
+protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+throws ServletException, IOException {
+	response.setContentType("text/html;charset=UTF-8");
+	try (PrintWriter out = response.getWriter()) {
+
+		HttpSession httpSession = request.getSession();
+		httpSEssion . removeAttribute("current — user" );
+		response.sendRedirect("login.jsp);
+}
+} 
+>Output:

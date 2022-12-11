@@ -1,0 +1,351 @@
+a.1) 
+
+	a.1.1) remove button trigger modal code 
+	a.1.2) change class id
+	a.1.3) which modal to target inrespective box
+				<div class="card" data-toggle="modal" data-target="#add-product-modal">
+
+
+a.2) Test
+	Add product -> modal opens up
+
+a.2) Design add product form
+		increase modal size: modal-lg in modal-dialog class
+		change modal-title to product details
+
+		a.2.1) Add form in body
+			what fields in form? //check product.java -> pId(auto generated not needed)
+											 pName
+							How to create field in form?
+
+		for ex create required field in form
+			<div c1ass="form-group">
+			<input type="text" class="form-control" placeholder="Enter title of product" name = "pName" required />
+			</div>
+
+
+		a.2.2) Test: add product -> can see field in modal
+		
+		Create description field
+		//form-control makes it adjustable size	
+		//add style height: 250 px
+
+
+		a.2.3) Add description field : 
+
+		a.2.4) add pPrice, pDiscount , pQuantity form groups
+		a.2.5) Create drop down 	//data fromd database will be fetched here		//Dnyamic values
+				how? form-group class and select tag
+
+			<div class="form-group">
+				<select name="catId" class="form-control" id=""> 
+					<option value="laptop"> </option>
+					<option value="laptop"> </option>
+					<option value="laptop"> </option>
+	
+				</select>
+	
+			//Dynamic fetching of entries in form group
+				<div class="form-group")
+				<label for="pPicfi>Se1ect Piture of product</label>
+					<br>
+				<input type="file" id="pPic" name="pPic" required />
+				</div> ‘
+			
+		a.2.6) place to attach pics and files
+		a.2.7) add submit button
+		
+
+		TEST: categories drop down in modal
+			Laptops
+			Mobile Phones
+			Clothes		//retrieved from database
+
+
+		a.2.8) What if we enter new category? -> will get updated and can see in Add new product
+
+		
+		
+a.3) How to get the values dynamically? //Hibernate CategoryDao function called from admin.jsp
+				
+	a.3.1) CategoryDao : This will give us the categories
+			inside CategoryDao.java -> create method:  List<Category> getCategories()
+	a.3.2) 	
+		a.3.2.1) get session
+		a.3.2.2) create query using session
+		a.3.2.3) get list from query
+
+		  public List<Category> getCategories() {
+				Session s = this.factory.openSession(); 
+				Query query = s.createQuery("from Category");
+				List<Category> list = query.list();
+				return list;
+			}
+		a.3.2.4) create query using session
+		a.3.2.5) Call the function getCategories() from admin.jsp
+				How? get Factory
+				<%
+				CategoryDao cdao = new CategoryDao(FactoryProvider.getFactory());
+				List<Category> list = cdao.getCategories();
+				%>
+		a.3.2.6) Print list data into form group drop down
+				How?
+				for each loop
+
+				<select name="catId" class="form-control" id=""> 
+				
+					<%
+					for(Category c:list) {
+					%>
+
+
+					<option value="<%= c.getCategoryId() %>"> <%= c.getCategoryTitle() %> </option>
+								//c.getCategoryId() will send id into database
+						
+					<% } %>
+
+				</select>
+
+		TEST
+---------------------------------------------------------------------------------------------
+Admin.jsp
+
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+( !DOCTYPE html>
+(html>
+<head>
+(meta http-equiv="Content-Type" content="text/html; charset=UTF—8">
+<title>Admin Pane1(/title>
+<%@include Fi1e="components/common_css_js.jsp" %>
+</head>
+<body>
+<%@include File="components/navbar.jsp" %>
+
+
+<div class="container admin">
+
+  <div class="container-fluid">
+	<%include file="components/message.jsp" %>		
+</div>
+  </div>
+  <div class="row mt-3">
+
+	<div class="col-md-4">
+		
+		<div class="card">
+		
+			<div class="card-body text-center">
+
+			<div class="container">
+			  <img style="max-width : 125px;" class="img-fluid" src="img/seo-and-web.png" alt
+			</div>
+				<h1>2342</h1>
+				<h1>Users</h1>
+			</div>
+	
+		</div>
+	</div>
+
+	<div class="col-md-4">
+
+
+
+//Button Trigger Modal
+
+			<div class="card" data—toggle="modal" data—target:"#add—catégory-modal"	//specify id of which modal to open from button
+		
+			<div class="card-body text-center">
+				<div class="container">
+			  		<img style="max-width : 125px;" class="img-fluid" src="img/list.png" alt
+				</div>
+				<h1>2342</h1>
+				<h1>Category</h1>
+			</div>
+	
+		</div>
+
+	<div>
+
+	<div class="col-md-4">
+
+		<div class="card" data-toggle="modal" data-target="#add-product-modal">
+		
+			<div class="card-body text-center">
+			<div class="container">
+			  <img style="max-width : 125px;" class="img-fluid" src="img/product.png" alt
+				</div>
+				<h1>2342</h1>
+				<h1>Products</h1>
+			</div>
+	
+		</div>
+
+	</div>
+
+
+	<!-- Category Modal -->
+
+	<div class="modal fade" id="add-category-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+ 	<div class="modal-dialog" role="document">
+    	<div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+ 
+		<form action="ProductOperationSServlet" method="post">
+
+			<input type="hidden" name="operation" value="addcategory">
+
+			<div class="form-group">
+				<input type="text" class="form-control" name="catTitle" placeholder="Enter category title" required />>	
+				</div>	
+
+				<div class="form-group">
+					<textarea style="height: 200px;"class ="form-control"placeholder = "Enter  category description" name ="categoryDescription" required> </textarea>
+				</div>
+				
+			</form>
+
+
+
+			<div class="container text-center">
+				<button class="btn btn-outline-success">Add category </button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+
+      </div>
+
+      <div class="modal-footer">
+     
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<------End of category modal----->
+
+
+<------start of product modal----->
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="add-product-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Product details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+	<!--form-->
+
+		<form>		
+			
+			<div c1ass="form-group">
+			<input type="text" class="form-control" placeholder="Enter title of product" name = "pName" required />
+			</div>
+
+			<div class="form-group">	
+			<textarea class="form-control" placeholder="Enter product description" name="pDesc"</textarea>	
+			<div>	
+
+			<div class="form-group")
+			<input type="number" class="form-control" placeholder="Enter price of product" name="pPrice" />
+			</div>
+
+			<div class="form-group">
+			<input type="number" class="form-control" placeholder="£nter product discount" name="pDiscount />
+			</div>
+
+			<!--product quantity-->
+			<div class="form-group">
+			<input type="number" class="form-control" placeholder="Enter product Quantity" name="pQuantity" required />
+			</div>
+
+			<!--product price-->
+			<div class="form-group">
+			<input type="number" class="form-control" placeholder="Enter price of Product" name="pPrice" required />
+			</div>		
+
+	
+
+			<%
+				CategoryDao cdao = new CategoryDao(FactoryProvider.getFactory());
+				List<Category> list = cdao.getCategories();
+			  %>
+
+
+
+
+
+
+			<!--product quantity-->
+			<div class="form-group">
+				<select name="catId" class="form-control" id=""> 
+				
+					<%
+					for(Category c:list) {
+					%>
+
+
+					<option value="<%= c.getCategoryId() %>"> <%= c.getCategoryTitle() %> </option>
+			
+	
+					<% } %>
+
+				</select>
+
+			<div class="form-group">
+				<input type="number" class="form-control" placeholder="Enter product Quantity" name="pQuantity" required />
+			</div>
+
+
+
+			<!--
+			<div class="form-group">
+			<label for="pPicfi>Se1ect Piture of product</label>
+			<br>
+			<input type="file" id="pPic" name="pPic" required />
+			</div> 
+
+
+			<!-—submit button-->
+			<div class="container text-center">
+
+			<button class="btn btn-outline-success">Add product</button>
+			</div>
+
+
+		</form>
+
+
+	
+
+	<!--end form-->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<-----------end of product modal------->
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+a) How to configure hibernate and database
+
+a.1) How to configure hibernate and mysql connector
+  open pom.xml
+	Add Hibernate dependency
+		Google Hibernate Maven -> Select a version -> Copy Maven code -> paste in pom.xml
+		<!-— httgs:z/mvnrepository.comZartifathorg.hibernatelhibernate—core
+		<dependency>
+		<groupId>org.hibernate</groupId>
+		<artifactId>hibernate—core</artifactId>
+		<version>5.4.2.Final</version>
+		</dependency>
+I
+	Project mycart -> Build with dependencies
+	//How builds with dependencies? Netbeans downloads all Hibernate dependency jar files
+	dependency folder -> jar files
+	//dependency maven code downloads these dependencies
+
+
+	Add MySQL CONNECTOR DEPENDENCY
+		Google mysql connector -> Select a version -> Copy Maven code -> paste in pom.xml
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+		<groupId>mysql<lgroupId>
+		<artifact1d>mysql-connector-java</artifactId>
+		<version>5.1.48</ver5ion>
+		</dependency>
+
+
+
+a.2) How to create new database
+
+	a.2.1) SQLYog
+	a.2.2) root -> right click	-> Create database -> database name : myCart => Create
+			//why create database? create tables and store data here
+
+
+a.3) How to create hibernate config file
+
+	a.3.1) Create a folder for xml file
+		 mycart -> Files -> src - > main -> right click -> Create new folder resources
+		//adds subfolder to Other sources folder
+	
+	a.3.2) mycart -> Other Sources-> src/main/resources -> xml -> Xml document : hibernate.cfg.xml
+
+	a.3.3) write all hibernate configurations:
+		a.3.3.1) DTD
+		a.3.3.2) sessionfactory
+				driver_call property
+				url property	//use url connection 
+				username property //
+				password property //
+				dialect property	 // depends on what database version
+					//Ctrl + O -> Opens up the class MySQL57Dialect to crosscehck names
+				hbm2ddl.auto
+
+		<?Xml
+ 		<!DOCTYPE hibernate—configuration SYSTEM
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.9.dtd">
+		<hibernate-configuration>
+			<session-factory>
+				<property name="connection.driver_c1ass">com.mysq1.jdbc.Driver </property>I
+				<property name="connection.url">jdbc:mysql://localhost:3366/mycart </property>
+													<!- databasename-->				
+				<property name="connection.username"> root </property>
+				<property name="connection.password"> root </property>
+				<property name="dialect"> org.hibernate.dialect.MySQL57Dialect </property>
+				<property name="hbm2ddl.auto">updatek/property>
+				<property name="show_sql">true</property>
+
+			<session-factory>
+
+		</hibernate-configuration>
+
+	a.3.4) Test configuration file
+		
+		a.3.4.1) Write helper class (Source packages -> new java class -> FactoryProvider)
+								//create in com.learn.mycart.helper
+
+		a.3.4.2) create SessionFactory factory member variable
+			
+		a.3.4.3) getFactory() : add try catch , to avoid null pointer exception
+		a.3.4.4) put value in factory variable , why? so that factory is not null, how? 
+				//this design pattern = singleton design pattern
+				object,session factory created when factory value is null
+
+			   //Note: provide xml file path //where to read config from
+ 
+				public static SessionFactory getFactory() {
+					try {
+						if(factory == null)
+						{
+						  factory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+						}
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return factory;
+				}
+
+		a.3.4.5) TEST: index.jsp
+			a.3.4.5.1) Create session factory object in index.jsp : Ctrl+Space to import
+					How? using scriptlet tag <% %>
+
+			a.3.4.5.2) use FactoryProvider.getFactory()	
+
+			a.3.4.5.3) Run project mycart : if any error -> mycart -> clean and build -> Run
+						provide tomcat authentication : usename and password
+-------------------------------------------------------------------------------------------------
+Output:
+	
+Hello World!
+Creating session factory object
+org.hibemate. internal. SessionFactoryImpl@70838bd0
+				  |-------------| ------------|
+				  implementation	 reference hashcode
+				class object		
+
+				
+	//Proof that session factory built
+	//why singleton factory design? if we write 	out.println(FactoryProvider.getFactory()); multiple times
+		//still outputs same object hashcode 		
+			
+---------------------------------------------------------------------------------------------------
+			a.3.4.5.4) why null?
+
+
+	<%@page import="com.learn.mycart.helper.FactoryProvider"%>
+	<%@page contentType="text/html" pageEncoding="UTF-8"%>
+	< EDOCTYPE html >
+	<html>	
+		<head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+			<title>JSP Page</title>
+		</head>
+		<body>
+			<h1>Hello World!</h1>
+			<h1>Creating session factory object</h1>
+			
+			<%
+			out.println(FactoryProvider.getFactory());			
+
+			%>
+
+		</body> I
+	</html>
+				
+		
+			

@@ -1,0 +1,185 @@
+a.1) Fetch all products
+
+	a.1.1)Create space to display them
+		 in index.jsp create row,create 1 col (size 2) for categories, (size 8)other for products
+
+	a.1.2) Create method to get Product our folder and Database
+		In ProductDao.java ==> create method getAllProducts()
+
+		a.1.2.1)    Open session
+		a.1.2.2) 	 Create Query : query name from Product //Product is class
+		a.1.2.3)	Get all data in a list from session Query 
+				 query.list();	//list will contain Product type //generic type
+
+		a.1.2.4) 	return this list
+
+	a.1.3) call this method on index.jsp in our row space
+
+		a.1.3.1) in scriptlet tag
+				create ProductDao object	which requires Sessionfactory
+				use ProductDao object to call method dao.getAllProducts() to get list of all products
+
+		<%
+			ProductDao gag=new ProductDao(FactoryProvider.getFactory());
+			List<Product> list =hao.getAllProducts();
+		%>
+
+			
+		a.1.3.2) traverse the list in col
+
+			<h1>Number of products is <%= list.size() %></hl>
+
+		a.1.3.3) Show all products on home screen
+			<%
+			for(Product productzlist)
+			 {
+			   out.println(product.getpName() +"<br>") ;
+			 } 
+			%>
+
+		a.1.3.4) Test: Home page -> refresh
+	
+			Number of products IS 4
+			Lenovo ldeapad 130 Core i3 7th
+
+			Dell 14%000 Core i3 7th Gen
+
+			HP 15g Core i3 7th Gen
+
+			Apple MacBook Air Core i5 Sth Gen
+		
+
+	a.1.4) Create method to get Category details from database
+
+		a.1.4.1) In CategoryDao similar get categories
+		public List<Category> getCategories(b {
+			Session 5 = this.factory.open$ession();
+			Query query = s.createQuery("from Category") ;
+			List<Category> list = query.1ist();
+			return list;
+
+}
+
+
+
+		a.1.4.2)
+			<%
+			ProductDao gag=new ProductDao(FactoryProvider.getFactory());
+			List<Product> list =hao.getAllProducts();
+			CategoryDao cdo = new CategoryDao(FactoryProvider.getFactory());
+			List<Category> clist = cdao.getFactories();	 
+		%>
+
+
+		a.1.4.3) Test
+
+		5 k
+
+		laptops
+
+		Mobile Phones
+		Cloths
+
+		Electronics
+		Kitchen
+
+		//Also products visible
+
+
+	a.1.5) Print photo on home page?
+			a.1.5.1) Get photo text
+			 use getpPhoto() method using Product product object
+			a.1.5.2) Get photo using name
+
+		<%
+			for(Product product : list)
+			 {
+			   out.println(product.getpPhoto() + "<br>") ;
+			   out.println(product.getpName() + "<br><br>")	
+			 } 
+			%>
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+<div class="row">
+
+<%
+	ProductDao gag=new ProductDao(FactoryProvider.getFactory());
+	List<Product> list =hao.getAllProducts();
+%>
+
+
+<!——show categories——>
+	<div class="col-md-2">
+		<!-—show categories-->
+		<div class="col-md-2">
+		<h1><%= clist.size()%></hl>
+		<%
+			for (Category c : clist) {
+				out.println(c.getCategoryTitle()+"(br>");
+			}
+%>		
+
+
+	</div>
+
+
+<!-—show products-->
+<div c1ass="col-md-8">
+	<%
+
+	<h1>Number of products is <%= list.size() %></hl>
+	<%
+	   for(Product productlist)
+		{
+		  out.println(product.getpName() +"<br>") ;
+		} 
+	%>
+</div>
+
+< / div>
+
+------------------------------------------------------------------
+ProductDao.java
+
+private SessionFactory factory;
+
+public ProductDao(SessionFactory factory) {
+this.factory = factory;
+
+}
+
+public boolean saveProduct(Product product) {
+boolean f = false;
+try {
+
+Session session = this.factory.openSession();
+Transaction tx = session.beginTransaction();
+session.save(product);
+tx.commit();
+session.close();
+
+f = true;
+} catch (Exception e) {
+e.printStackTrace();
+f = false;
+}
+ return f;
+
+
+public List<Product> getAllProducts()
+{
+//get all products
+Session s = this.factory.openSession();
+Query query = s.createQuery("from Product");
+List<Product> list = query.1ist();
+return list;
+
+}
+
+
+
+
+a.2) 

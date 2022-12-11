@@ -1,0 +1,83 @@
+Objective: click on add to cart button --> qty increase
+
+
+
+m1) manage cart at client side (browser)
+
+	how? javascript
+	advantage: less load on server
+
+m2) manage cart at server
+	database table
+	database list variable
+
+	how? java	 + html
+
+__________________________________________________________--
+
+
+We will use client side
+
+a.1) store data on client side
+	how to store data on client side 
+
+
+	1) Local storage (little permenent)	//we use
+		What ? stores data with no expiration date
+		how to clear local storage? only via Javascript : clear - Browser cache / locally stored data
+		this data doesnt get deleted as long as we dont clear cache/clear using JS
+
+	2) local Session (session temporary)
+		What ? stores data for a session (until browser is closed)
+
+
+
+a.2) How to use localStorage	//window.localStorage
+
+
+
+	a.2.1) how to set data in localStorage	//to add products in cart
+		localStorage.setitem(key,value)	//note key and value are string
+
+	a.2.2) how to get/fetch data in localStorage//to remove products from cart
+		value=localStorage.getitem(key)
+
+
+
+a.3) Demo:
+
+js -> console -> 
+
+>localStorage
+
+//length: 0
+
+>localStorage.setItem("firstname","codewithdurgesh")
+
+>localStorage
+
+//Output:
+  Storage {firstname: "codewithdurgesh"}
+
+>localStorage.setItem("platform", "youtube")
+  undefined
+
+>localStorage
+
+  Strorage {firstname: "codewithdurgesh", platform: "youtube", length: 2}
+  firstname:  "codewithdurgesh"
+  length: 2
+  platform: "youtube"
+  __proto__ : storage
+
+
+>localStorage.length
+>2
+
+localStorage.getItem("firstname");
+"codewithdurgesh"
+
+
+>localStorage.getItem("platform")
+"youtube"
+

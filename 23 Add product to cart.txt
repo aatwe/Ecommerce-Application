@@ -1,0 +1,197 @@
+clear() localStorage
+
+
+a.1) Testing
+alert("Testing");
+
+webpage -> view page source
+//where this file included? components -> common_css_js.jsp		
+
+	Web Pages
+		js
+			script.js
+			//where this file included? components -> common_css_js.jsp
+		
+
+
+go into -><script src="js/script.js"></script> -> refresh
+
+
+
+a.2) Button click -> function call
+
+	Create function  add_to_cart  //args: pid,pname,price 
+
+	a.2.1) getItem from cart	 
+	a.2.2) create products array
+	a.2.3) create single product object
+	a.2.4) push product into array products
+	a.2.5) update product in localStorage
+				use setItem() ,(what) pass cart item from localStorage, operation? change products array to string
+
+
+	
+
+
+function add_to_cart(pid,pname,price)
+{
+	let cart = localStorage.getItem("cart");	
+	if(cart==null)
+	{
+		//no cart yet
+		let products = []
+		let product = {productId : pid , productName :pname , productQuantity : 1 , productPrice: price}
+		products.push(product);
+		localStorage.setItem("cart", JSON.stringify(products));
+	}else	//if add to cart clickedagian
+	{
+		//cart is already present
+	
+	}
+	
+
+}
+ 
+
+
+a.3) Call function add_to_cart
+		pass parameter: dynamic values : p.getId(),p.getpName(), p.getPriceAfterApplyingDiscount() 
+
+
+	index.jsp -> find add to cart button
+	<div class="card-footer text-center">
+	<button class="btn custom~bg text-white" onclick="add_to_cart(<%= p.getpId() %>, <%=p.getpName() %>, <%= p.getPriceAfterApplyingDiscount() %>)">Add to Cart</button>
+	<button class="btn btn-outline-success "> &#8377; (%= p.getPriceAfterm
+</div>
+
+
+a.4) Test
+ inspect-> console
+1) 
+>localStorage
+localStorage
+Storage {name: "durgesh", cart: "[J", names:
+"function toString() { [native code] }", Length:
+3} ,
+cart: "[]"
+length: 3
+name: "durgesh"
+names: "function toString() { [native code] }"
+>__proto__: Storage
+
+2) localStorage.clear()
+
+3) Add to cart
+
+4)
+  a)	products now contain the below object
+	"productId":6,"productName":"POC0 X2 (AtLantis Bm Rflrv","productQuantity":1,"productPrice":15396}]
+
+
+  b) what if we click again? else loop  in add_to_cart() not done yet
+	
+ 
+>localStorage.clear()
+
+> localStorage
+< Storage {cart:
+  "[{"productId":6,"productName":"POC0 X2 (AtLantis Bm Rflrv","productQuantity":1,"productPrice":15396}]", Length: 1}
+	cart: "[{"productId":6,"productName":"POC0 X2 (Atlantis Blue, 64 GB) (6 GB RAM)","productQuantity":1,"producth
+	length: 1
+>__proto__: Storage
+
+
+
+  c) How to add to cart again? else loop?
+	1) let pcart = JSON.parse(cart)  //convert cart object to string and store in pcart
+	2) check which add to cart button was clicked? find which pid clicked
+		in pcart object check if clicked item already present	
+			if already present -> increment quantity
+			
+			else -> add that product in cart		
+
+
+		pcart.find((item)=> {	//this is a callback function
+		
+		})
+
+
+	3) how to increase quantity in cart?
+		find and identify the oldProduct from pcart(item)
+		update its quantity of this oldProduct object
+		update the array products[] in cart
+		localStorage.setItem()
+
+
+function add_to_cart(pid,pname,price)
+{
+	let cart = localStorage.getItem("cart");	
+	if(cart==null)
+	{
+		//no cart yet
+		let products = []
+		let product = {productId : pid , productName :pname , productQuantity : 1 , productPrice: price}
+		products.push(product);
+		localStorage.setItem("cart", JSON.stringify(products));
+		console.log("Product is added for first time")
+
+	}else	//if add to cart clickedagian
+	{
+		let pcart = JSON.parse(cart);
+
+		let oldProduct = pcart.find((item) => item.productId == pid)
+		if(oldProduct)
+		{
+			//increase quantity
+
+			oldProduct.productQuantity = oldProduct.productQuantity + 1
+			pcart.map((item)=> {
+				if(item.productId == oldProduct.productId)
+				{
+					item.productQuantity = oldProduct.productQuantity;
+				}
+				 localStorage.setItem("cart", JSON.stringify(pcart));	
+				 console.log("Product quantity is increased")
+			})
+
+		} else {
+			//have to add the product
+			let product = {productId : pid , productName :pname , productQuantity : 1 , productPrice: price}
+			products.push(product);
+			localStorage.setItem("cart", JSON.stringify(pcart));
+			 console.log("Product is added")
+		}
+	}
+}
+ 
+5)
+1) Add to cart
+Console: Product is added for the first time 
+localStorage //check
+
+localStorage
+Storage {cart:
+'V'waproductId":l,"productName":"Lenovo Id m 7th ","productQuantity":1,"pr
+, Length: 1}
+cart:k"[{"productld":1,"productNamem
+length: 1
+>__proto__: Storage
+
+2) Add to cart again //same product
+
+localStorage
+Storage {cart:
+'"[{"productId":3,"productName":"Lenovo Ideapad 139 m 7th ","productQuantity":2,"pr
+, Length: 1}
+
+
+3) Add to cart //different product 
+
+
+Storage {cart:
+//2 different products added
+V'productId":1,"productName":"Lenovo Ideapad 139 m Gen ","productQuantity":l,"productPrice":17699}]", Length: 1}
+cart: "[{"productId":1,"productName":"Lenovo Ideapad 139 Core i3 7th ","productQuantity":1,"productPrice":25191},QQ
+length: 1
+
+>__proto__: Storage

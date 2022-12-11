@@ -1,0 +1,94 @@
+How to configure bootstrap in project?
+
+a) We know index.jsp runs at start
+
+How to use bootstrap 4 on this?
+
+a.1) paste css from getstarted doc in <head>
+<script src = "">	//CDN
+a.2) paste js from getstarted doc <head>
+<script src = "">  	//CDN
+
+-> Try refreshing : font look changed //Bootstrap applied
+
+
+
+b) Create about.jsp page
+	How to apply bootstrap on this?
+	copy paste both script (CSS, JS)
+
+
+Problem: have to re add css and js
+Solution: create reusable component
+
+
+
+_________________________________________________________
+
+How to create components?
+
+b.1) Create components folder in WebPages folder	//for reusable components(ex header,footer)
+b.2) Create jsp file: common_css_js.jsp
+b.3) Contains:
+
+<!--g§§——>
+
+(link rel="stylesheet" href="https:{/stackgath.bootstragcdn.comgbootstrapg4.4.lgcssgboo
+
+<!--jaya§gript-->
+
+(script srcE"https:[[code.jguery.com[jouery-3.4.l.slim.min.js" integrity="sha§84-36qa48
+
+(script src="https://cdn.jsdelivr.net/nom/oooper.js@l.16.9/dist/umd/popper.mip.js" inte
+
+(script src="httgs:[[stackgath.bootstragcdn.com/bootstragg4.4.1(jsfbootstrap.min.js" in
+
+
+b.4) include common_css_js.jsp in index.jsp? include directive
+How to include another jsp in jsp?  include directive
+
+<head>
+<meta http-equiv="Content-Type" content="text/htm1; charset=UTF—8")
+<title>MyCart - Home </title>
+<%@include file="components/common_css_js.jsp" %>I
+</head>
+
+
+------------------------------------------------------------------------------------------
+Create img folder
+Create js folder
+Create css folder
+	style.css
+
+
+c) How to apply style.css on every page? include style.css in common_css_js.jsp
+
+<link rel="stylesheet" href="css/style.css">
+
+<!--css——>
+
+<link rel="stylesheet" href="https:{/stackgath.bootstragcdn.comgbootstrapg4.4.lgcssgboo
+
+<link rel="stylesheet" href="css/styles.css">
+
+<!--javaScript-->
+
+<script srcE"https:[[code.jguery.com[jouery-3.4.l.slim.min.js" integrity="sha§84-36qa48
+
+<script src="https://cdn.jsdelivr.net/nom/oooper.js@l.16.9/dist/umd/popper.mip.js" inte
+
+<script src="httgs:[[stackgath.bootstragcdn.com/bootstragg4.4.1(jsfbootstrap.min.js" in
+
+
+
+
+d) How to include common js file in common_css_js.jsp
+ Create common js file: script.js
+Add: <script src= "js/script.js"></script>
+
+
+refresh -> alerts: loaded on browser
+--------------------------------------------------------------------------------------------
+
+WHAT DONE? CSS,JS,Images,Components config
+	 

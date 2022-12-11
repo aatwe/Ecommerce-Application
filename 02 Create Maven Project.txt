@@ -1,0 +1,39 @@
+What is maven project advantage? can download dependencies
+						    can build project easily
+
+a) Create Java with maven
+	a.1) Web application
+
+
+	project name: mycart
+	project location
+	--> next
+
+
+	a.2) Select serverto (run the project):   Apache Tomcat or TomEE
+
+	a.3)Apache netbeans view
+		mycart
+		 Web Pages		-----> contains all static content
+			index.html	//hello world						//we will create index.jsp instead
+		 Source Packages -----> Servlet/helper/Java things
+		    	com.learn.mycart
+		 Dependencies	------> conatins all dependencies
+			 
+		 Java Dependencies
+		 	JDK 11
+
+		 ProjectFiIes	
+			pom.xml	-------> maven file : project-object-model		//use case? specify dependency here
+														//hibernate dependency/mysql dependency all here
+
+		 
+		In end: mycart -> Build with dependencies
+
+
+	a.4) how to run project?
+			browser -> mycart -> right click -> run
+
+	a.5) project deploys and then runs	
+
+	a.6) Hello World //from html file

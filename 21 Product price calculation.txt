@@ -1,0 +1,46 @@
+Objective: 
+
+show original price -> calculated price
+
+
+
+
+a.1) where is price button? index.jsp -> product card
+	card contains: pPhoto, pName, pDesc , addToCart button, pPrice
+
+
+a.2) add discount in span in button itself
+	add class in span text-secondary
+	add custom class in span : discount-label
+	Dynamically bring discount : p.getpDiscount() 
+
+<div class="card-footer text-center">
+<button class="btn customrbg text-white">Add to Cart</button>
+<button class="btn btn-outline-success"> &#8377; <%= p.getpPriceAfterApplyingDiscount()%>/- <span class="text-secondary discount-label"> <%=p.getpPrice() %> <%= p.getpDiscount() %>%= off </span> </button>
+</div>
+
+
+//all values fetched
+
+----
+
+styles.css
+
+.discount-label{
+	font-size: 10px!important;
+	font-style: fitalic!important;
+}
+
+a.3) How to calculate discounted price
+
+  	Create function in product.java
+
+//calculate price after discount
+
+public int getPriceAfterApplyingDiscount() {
+	int d = (int) ((this.getpDiscount() / 100.0) * this.getpPrice());
+	return this.getpPrice() - d;
+
+}
+
+//Can see all prices discounted

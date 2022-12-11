@@ -1,0 +1,145 @@
+what flow?
+
+
+login -> form -> action -> servlet 
+register btn click  -> data from form to servlet ->  data servlet  -> database
+login btn -> data from form to servlet -> -> userDao -> data authenticate with database (check if user or not) //inservlet-> return result
+
+
+a.1)  if successful login details -> 2 options
+
+			admin user		//admin.jsp
+			normal user
+
+
+a.2) Login User
+	In else part LoginServlet.java:
+
+	How will person login? we will use session  to store login data (httpSession)
+	What other ways to store login data? cookies etc
+
+	a.2.1) How to Store user data using httpSession?
+	
+	//login				//key		//value
+	httpSession.setAttribute("current-user",user);		//session logic? as long as user is inside httpSession : user is logged in
+											//remove key when want to log out
+
+	a.2.2) How to determine if admin or normal user? .getUserType()
+		  How to forward user to page? response.sendRedirect()
+
+	if(user.getUserType().equals("admin"))
+	{
+		response.sendRedirect("admin.jsp");
+	}else if(user.getUserType().equals("normal")) {
+		response.sendRedirect("normal.jsp");
+	}
+	 else
+	{
+		out.println("We have not identified user type");
+	}
+
+
+	a.2.3) TEST		//We havent set logic how to set person as admin, right now manually set user to admin in database in user type column
+					//Other emails are normal users
+		sqlyog 
+		 mycart
+		  Tables
+			category
+			product
+			user
+
+
+	Try log in with admin email + password -> Output : This is admin panel page
+			     normal user  + password -> Output : this is normal user panel
+
+What achieved? find which user is admin which is normal user from 1 form itself	//notice no separate form for admin panel
+	logic in servlet
+
+
+	a.2.4) What left? protection. Anyone can type url of admin page and open
+		How to restrict admin page to be seen by only admin logged in user
+
+LoginServlet.java
+
+package com.learn.mycart.servlets;
+import java.io.IOException;
+
+import java.io.Printwriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServ1et;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class LoginServlet extends HttpServlet {
+lprotected void progessRequest(HttpServletRequest request, HttpServletResponse response)
+throws ServletException, IOException {
+response.setContentType("text/html;charset=UTF-8");
+try (Printwriter out = response.getwriter()) {
+
+	String email = request.getParameter("email");
+	String password = request.getParameter("password");
+
+	//validations
+
+	//authenticating user
+	UserDao userDao = new UserDao(FactoryProvider.getFactory());
+	User user = userDao.getUserByEmailAndPassword(email, password);
+	System.out.println(user);
+
+
+	HttpSession httpSession = request.getSession();
+
+
+				if(user == null) {
+					out.println("<h1>Invalid details </h1>");
+					httpSession.setAttribute("message", "Invalid details!! Try with another one");
+					response.sendRedirect("login.jsp");	
+					return;
+				}else 
+				{
+					out.println("<h1>Welcome "+ user.getUserName() + " </h1>");
+					httpSession.setAttribute("current-user",user);
+					if(user.getUserType().equals("admin"))
+					{
+						response.sendRedirect("admin.jsp");
+					}else if(user.getUserType().equals("normal")) {
+						response.sendRedirect("normal.jsp");
+					}else
+						{
+							out.println("We have not identified user type");
+						}
+				}
+		}
+	}
+
+}
+
+
+a.2) admin.jsp
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta http-equiv=iContent—Type" content="text/html; charset=UTF-8">
+			<title>g§E Page(/title>
+		</head>
+	<body>
+		<h1>This is admin panel </h1>
+	</body>
+</html>
+
+a.3) normal.jsp
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>3§E Page(/title>
+	</head>
+	<body>
+		<h1>This is normal page </hl>
+	</body>
+</html>

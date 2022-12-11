@@ -1,0 +1,322 @@
+A)
+Why create tables? store data
+what kind of data? user data, username,password
+where stored? in database
+
+What database we using? relational database MS //RDBMS MySQL
+
+What special about relational Database? data in form of tables
+
+How many tables needed?
+	a) User data Table : Find what requirement and find accordingly columns needed
+
+		columns: userld I userName I userEmail I userPassword I userPhone I userPic I userAddress
+
+			   -Key--
+
+	
+	
+
+	b) Category Table:	
+		
+		columns: categoryld I categoryTitle IcategoryDescription
+
+
+	c) Product table
+		
+		columns: pPid I pTitIe I pDesc I Pphoto I Pprice I Pdiscount I pQuanity I cld	
+															 --fom category table--
+
+	
+B) How to create table in database? 
+
+	b.1) Create table using JDBC -> MySQLYog / (create manually)
+
+	b.2) create table using Hibernate
+		
+		b.2.1) Create entity User.java + Category.java + Product.java class with required fields in Source packages -> 	com.learn.mycart.entities
+			  How to create entity? use @Entity 
+			  How to make primary key? use @Id
+			  How to auto increment userId column?@GeneratedValue(strategy = GenerationType.IDENTITY)
+			  How to specify column max length? @Column(length = 1500, name)  //also give new name to col
+
+		b.2.2) Create getter , setter and constructor(with id + without id + default)
+				//Why separate constructor without Id? id -> auto incrementing 
+			
+		b.2.3) @Override toString()
+		//How to create these? Alt + Insert
+
+	b.3) How to do mapping? //create List of Products in Category.java
+	for ex 1 category --> has many products		
+	private List<Product>products = new ArrayList<>();
+	OR
+	private List<Product>products 		
+		Q) What if we have too many products? use hashset (better performance)
+		//Create constructor,getter , setter for List also
+
+	
+	Q) How to make class Category one to many? use @OneToMany in Category.java
+	@OneToMany(mappedBy = "category")
+	private List<Product>products = new ArrayList<>();
+
+
+	Q) How to make class Product many to one? use @OneToMany in Product.java
+	@ManyToOne
+	private Category category;
+
+	//Note add category in constructor as well
+
+
+
+	b.4) Do testing  //Open hibernate.cfg.xml
+
+		b.4.1) Add mapping for all 3 classes in xml
+			<mapping c1ass="com.learn.mycart.entities.User" />
+			<mapping c1ass="com.learn.mycart.entities.Category" />
+			<mapping c1ass="com.learn.mycart.entities.Product" />
+
+		b.4.2) Create factory //Run index.jsp --> Update Database mycart //in xml (Clean and Build// reflects change in JAR file)
+
+Output:
+
+Hello World !
+
+Creatlng sesswn factory object					//Object created
+org.hibernate.internal.SessionFactoryImpl@d1d82cc
+org.hibernate.internal.SessionFactoryImpl@d1d82cc
+org.hibernate.internal.SessionFactoryImpl@d1d82cc
+
+
+>Check console: below queries fired(auto increment + foreign key)
+Hibernate: create table Category (bateggrygfl integer not nullIauto_increment, categoryDescription varchar(255), categoryTitle va:
+Hibernate: create table Prbduct (pId integer not null auto_increment, pDesc varchar(3000), pDiscount integer not null, pName varc
+Hibernate: create table User (user_id integer not null auto_increment, user_address varchar(1500), user_email varchar(100), user_
+Hibernate: alter table Product add constraint FK825V7lftk50hyta3jlxerywcb foreign key (category_categoryld) references Category
+
+//ConclusioN; Database updated after getFactory
+
+
+	b.5) Verify in Database:
+		sqlYog -> 
+		mycart
+		 Tables
+		  category
+		  product
+		  user
+
+		//Tables created
+________________________________________________________________________________________________---
+Class : User 	//ClassName
+
+User.java
+					
+package com.learn.mycart.entites;
+import javax.persistence.Entity;
+
+@Entity			//from java.persistent
+public class User {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(1ength = 10, name = "user_id")
+	private int userld;
+	@Column(1ength = 100, name = "user_name")	
+	private String userName;
+	@Column(1ength = 100, name = "user_email")
+	private String userEmail;
+	@Column(1ength = 100, name = "user_password")
+	private String userPassword;
+	@Column(1ength = 12, name = "user_phone")
+	private String userPhone;
+	@Column(1ength = 1500, name = "user_pic")
+	private String userPic;
+	@Column(1ength = 1500, name = "user_address")
+	private String g§grAddress;
+
+
+
+	public User(int userId, String userName, String userEmail, String userPassword, String qserPho..)
+		this.userId = userName;
+		this.userName = userName;
+		this.userEmail = userEmail;
+		this.userPassword = userPassword;
+		this.userPhone = userPhone;
+		this.userPic = userPic;
+		this.userAddress = userAddress;
+} 
+
+public User(String userName, String userEmail, String userPassword, String qserPho..)	
+this.userName = userName;
+this.userEmail = userEmail;
+this.userPassword = userPassword;
+this.userPhone = userPhone;
+this.userPic = userPic;
+this.userAddress = userAddress;
+} 
+
+public User() {
+}I
+
+public int getUserId() {
+return userId;
+
+}
+
+public void setUserId(int userld) {		//for all
+this.userId = userId;
+
+}
+...
+
+@Override
+public String toString() {
+
+return "User{" + "userId=" + userld + ", userNamez" + userName + ", userEmail .. //print reference and that will print	
+}
+
+}
+____________________________________________
+Category.java
+
+				
+
+package com.learn.mycart.entites;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+@Entity
+public class Category {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+Private int categoryld;
+private String categoryTitle;
+privateI String categoryDescription;
+
+@OneToMany
+private List<Product>products = new ArrayList<>();
+
+public Category() {
+
+}
+
+public Category(int categoryId, String categoryTitle, String categoryDescription)
+this.categoryId = categoryld;
+this.categoryTitle = categoryTitle;
+this.categoryDescription = categoryDescription;
+
+} 
+
+public Category(String categoryTitle, String categoryDescription) {
+this.categoryTitle = categoryTitle;
+this.categoryDescription = categoryDescription;
+
+}
+
+public Category(String categoryTitle, String categoryDescription,List<Produckp {
+this.categoryTitle = categoryTitle;
+this.categoryDescription = categoryDescription;
+this.products = products;
+}
+
+public int getCategoryId() {
+return categoryId;
+
+}
+
+public void setCategoryId(int categoryId) {
+this.categoryId = categoryId;
+
+}
+
+public String getCategoryTitle() {
+return categoryTitIe;
+
+}
+
+public void setCategoryTitle(String categoryTitle) {
+this.categoryTitle = categoryTitle;
+
+}
+
+public List<Product> getProducts() {
+return products;
+
+}
+
+public void setProducts(List<Product> products) {
+this.products = products;
+
+} I
+
+
+@Override
+public String toString() {
+return "Category{" + "categoryId=" + categoryId + ", categoryTitle=" +..
+}
+I
+
+}
+____________________________________________
+Product.java
+
+package com.learn.mycart.entites;
+
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public class Product {
+	private int pId;
+	private String pName;
+	@Column(1ength = 3966)
+	private String pDesc;
+	private String pPhoto;
+	private int pPrice;
+	private int pDiscount;
+	private int pQuantity;
+	@ManyToOne
+	private Category category;
+
+	//Getters,Setters , toString()
+public Product(String pName, String pDesc, String pPhoto, int pPrice, int pDiscount, int pQuantity, Category category) {
+	this.pName = pName;
+	this.pDesc = pDesc;
+	this.pPhoto = pPhoto;
+	this.pPrice = pPrice;
+	this.pDiscount = pDiscount;
+	this.pQuantity = pQuantity;
+	this.category = category;
+}
+
+	//generate getter,setters
+}
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+hibernate.cfg.xml
+
+<?xml
+<!DOCTYPE hibernate-configuration SYSTEM
+"http:g[www.hibernate.orgfdtdghibernate-configuration—3.®.dtd">
+a <hibernate-configuration>
+<session—factory>
+<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+<property name="connection.url">jdbc:mysql://localhost:3396/mycart</property>
+<property name="connection.username">root</property>
+<property name="connection.password">root</property>
+<property name="dialect">org.hibernate.dialect.MySQL57Dialect</property>
+<property name="hbm2ddl.auto">update</property>
+<property name="show_sql">true</property>
+<mapping c1ass="com.learn.mycart.entities.User" />
+<mapping c1ass="com.learn.mycart.entities.Category" />
+<mapping c1ass="com.learn.mycart.entities.Product" />
+
+</session-factory>
+</hibernate-configuration)
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+What if we want extra table? Add entity (.java) and then map in config.xml
+
+using property: <property name="hbm2ddl.auto">update</property>
+
+table will automatically update

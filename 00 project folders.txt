@@ -1,0 +1,33 @@
+Projects
+ mycart
+ Web Pages
+	META-INF
+	WEB-INF
+	components
+		common_css_js.jsp
+		message.jsp
+		navbar.jsp
+	css
+	img
+	js
+		scriptjs
+	aboutjsp
+	adminjsp
+	El index.jsp
+	loginjsp
+	norma|.jsp
+	registerjsp
+	
+@ Remote Files
+	
+Gil Source Packages	
+	
+CE] Test Packages
+	
+1331 Other Sources
+	
+F‘s Dependencies
+	
+Ps‘ Java Dependencies
+	
+C21 Project Files

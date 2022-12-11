@@ -1,0 +1,96 @@
+a) How to display message after registering user successfully
+
+	a.1) Where will processing be done? on Servlet page
+
+	a.2) Create new message.jsp
+
+	a.3) How will we send message? HTTP session
+		HTTP session will store message temporarily
+
+		Create HTTP Session
+		How to store value in http session?
+			a) create message object
+			b) .setAttribute() for single string
+			c) where to send response? response.sendRedirect("page.jsp")
+		
+
+		HttpSession httpSession = requestgetSession();
+		httpSession.setAttribute("messagekey","Registration successful!! User id is" +userId);
+		
+		response.sendRedirect("register.jsp");
+		return
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	a.4) How to capture data in message.jsp? Scriptlet
+<%
+		String message =(String)session.getAttribute("messagekey");
+		if(message != null) {
+			//print message
+			out.println(message);
+			//remove message from session
+			session.removeAttribute("message");
+		}
+%>		
+
+	a.5) Use message.jsp in register.jsp
+		How to include message.jsp in register.jsp --> <%include file="components/message.jsp" %>
+		Register.jsp
+		<div class="card">
+			<%include file="components/message.jsp" %>
+			<div class="card-body px-5">
+		....
+
+
+	a.6) test:
+		Register user -> fill data -> Register
+
+		>Displays on top: Registration successful !! 4
+
+
+
+b) Design registration message
+
+	b.1) bootstrap4 -alerts
+		in message.jsp after closign scriptlet tag, cant write java
+		note: change warning -> success
+<%
+		String message =(String)session.getAttribute("messagekey");
+		if(message != null) {
+			//print message
+			out.println(message);
+			//remove message from session
+			session.removeAttribute("message");
+		}
+%>
+
+<div class="alert alert-success alert-dismissable fade show" role = "alert">
+<strong><%= message%></strong> 
+<button type="button" c1ass="close" data-dismiss="a1ert" aria-1abel="Close">
+	<span aria-hidden="true">&times;</span> 
+</button>
+</div>
+
+<%
+		session.removeAttribute("message");
+
+%>
+
+	
+
+	b.2) Can see bootstrap message output
+
+
+	b.3) What advantage? can include message.jsp component anywhere we want to print message
+
+
+
+
+c) How to keep unique email id in database? @Column(unique=true)
+		
+
+
+	
+	

@@ -1,0 +1,249 @@
+Fixes:
+a.1) put entire register.jsp content in container or container-fluid
+a.2) Href Home to index.jsp
+	MyCart href -> index.jsp
+
+---what done? index.jsp and Register.jsp---	//component design pattern important
+
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+(html)
+<head>
+(meta http—equiv="Content—Type" content="text/html; charset=UTF—8">
+<title>New User(/title>
+<%@inc1ude file="components/common_css_js.jsp" %>
+</head>
+<body>
+	<%@inc1ude file="components/navbar.jsp" %>
+	<div c1ass="container—fluid>
+		//Put entire form inside it
+
+   </div>
+  </body>
+(/html> I
+________________________________________________________________________________
+How to put Registration data into database? Servlet
+
+a.1) Source packages -> new -> Servlet :
+	Classname : RegisterServlet
+	Package:    com.learn.mycart.servlets
+	//RegisterServlet.java
+
+a.2) Servlet
+	a.2.1) How is mapping of servlet? Annotations: @WebServlet
+	a.2.2) How to map servlet? 2 ways for Servlet mapping:
+			a.2.1) web.xml
+					when creating servlet -> add info to deployment descriptor(web.xml) -> Finish
+
+			//below added in web.xml
+
+			(servlet-mapping)
+			(servlet—name>RegisterServlet(/servlet-name>
+			(url-pattern>/RegisterServlet</url—pattern)
+			(/servlet-mapping>
+ 
+			a.2.2) Annotation
+
+What servelet looks like:
+	a.2.3) In servlet : processRequest contains : get / Post code --> doGet() and doPost() both call processRequest
+				//get and post request will both come in processRequest
+-----Servlet----------------------------------------------------------------------------------
+import javax.servlet.ServletException;
+import javax.servlet.annotation.webServ1et;
+import javax.servlet.http.HttpServ1et;
+import javax.servlet.http.HttpServ1etRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+@WebServlet(name = "RegisterServlet", urlPatterns = {"/RegisterServlet"})
+public class RegisterServlet extends HttpServlet {
+
+
+protected void processRequest(HttpServletRequest request, HttpServletResponse response
+	throws ServletException, IOException { I
+		response.setContentType("text/html;charset=UTF—8");
+try (PrintWriter out = response.getWriter()) {
+		/* TODO output your page here. You may use following sample code. */
+		out.pfintln("<!DOCTYPE html>");
+		out.println("(html>"); ‘
+		out.println("(head>");
+		out.println("<title>Servlet RegisterServlet</title>");
+		out.println("</head>");
+		out.println("(body>");
+		out.println("<hl>Servlet RegisterServlet at " + request.getContextPath() + "(/
+		out.println("</body>");
+		out.println("</html>");
+	}
+}
+
+@Override
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
+throws ServletException, IOException {
+processRequest(request, response);
+}
+* Handles the HTTP (code>POST</code> method.
+* @param request sgrvlgt request
+* @param response servlet response
+* @throws ServletException if a servlet-specific error occurs
+* @throws IOException if an I/O error occurs
+@Override
+protected void dqust(HttpServletRequest request, HttpServletResponse response)
+throws ServletException, IOException {
+pfibcessRequest(request, response);
+}
+
+-----Servlet----------------------------------------------------------------------------------
+
+b) Code Servlet
+	b.1) code your try catch for logging your errors. get form data in try block
+	b.2) how to get form data in try block? 
+
+	  //Form --> Servlet		
+		b.2.1) copy url pattern of register servlet from web.xml
+			
+		<servlet-mapping>
+			<servlet—name> RegisterServlet </servlet—name>
+			<url-pattern> /RegisterServlet </url-pattern>
+		</servlet-mapping>
+		
+		b.2.2) paste url pattern in form , provide method post
+
+			<form action="RegisterServlet" method="post">
+
+
+		b.2.3) What this will do? request data submitted from form via post request --> goes into register servlet
+	//Servlet --> Try
+
+//FETCH	b.2.4) Get data from request , specify div-input-name , store in variable userName
+				//Note: dont forget to specify name for every field in register.jsp form
+ 
+		try {
+			request.getParameter("user_name");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		b.2.5) how to apply validations? 
+				what are validations? Bean validation like: @NotNUll, @Null , @Past
+											//value of field must be not null etc //JavaEE
+				Ex if (userName.isEmpty())
+				   {
+					out.println("Name is blank");	//gets printed on browser by servlet
+					return
+				   }
+
+		b.2.6) we have the data,now create user.java entity object
+				how to create user object? we created constructors without userId
+			
+			call constructor:
+		User user = new User(userName, userEmail, userPassword, userPhone,"default.jpg", userAddress)
+
+
+
+		b.2.7) How to save data (user object) in hibernate?
+
+			b.2.7.1) Get factory 
+				    create hibernate session	
+						FactoryProvider.getFactory().openSession()
+	
+			b.2.7.2) beginTransaction()
+
+			b.2.7.3) save hibernate session	//save in user.java table
+					returns id , store in var userId
+
+			b.2.7.4) close hibernate session
+
+			b.2.7.5) print the id
+					out.println("Successfully saved");
+
+			b.2.7.6) Run project
+					Register -> submit data : Email, password, phone#, Address
+						>Output: User id is 1
+
+			b.2.7.7) Check database (SQLyog or Workbench)
+					//Note: password must be enccrypted, various methods : Google how to encrpyt password //helper classes
+
+					//Can do registration using AJAX also	
+
+		b.2.8)  How to differentiate bw admin and normal user? add type field
+															//delete data from database
+			
+
+			b.2.8.1) Add column user type in User.java
+					
+				a) 	@Column(name="user_type")
+					private String userType;	
+
+				b) 	Create getter & setter
+
+				c) Add (String userType) to constructor arg
+					initialize: this.userType = userType;			
+
+				d) pass "normal" when saving received data by default
+				User user = new User(userName, userEmail, userPassword, userPhone,"default.jpg", userAddress,"normal")
+
+				e)  How to make admin ? dealt by database
+
+				f) try registering -> Register
+					>Output:
+					Successfully saved
+					User id is 2
+					//Check database -> user type visible as normal
+
+			b.2.8.2) 			
+	
+
+
+RegisterServlet.java
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.webServ1et;
+import javax.servlet.http.HttpServ1et;
+import javax.servlet.http.HttpServ1etRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+@WebServlet(name = "RegisterServlet", urlPatterns = {"/RegisterServlet"})
+public class RegisterServlet extends HttpServlet {
+
+
+protected void processRequest(HttpServletRequest request, HttpServletResponse response
+	throws ServletException, IOException { I
+		response.setContentType("text/html;charset=UTF—8");
+		try (PrintWriter out = response.getWriter()) {
+
+			try {
+				String userName = request.getParameter("user_name");					//FETCH DATA
+				String userEmail = request.getParameter("user_name");
+				String userPassword = request.getParameter("user_password");
+				String userPhone = request.getParameter("user_phone");
+				String userAddress = request.getParameter("user_address");
+				
+				if (userName.isEmpty())										//Server side Validations
+				{
+					out.println("Name is blank");	//gets printed on browser by servlet
+					return
+				}
+			
+				User user = new User(userName, userEmail, userPassword, userPhone,"default.jpg", userAddress)		//Use Hibernate/ JDBC code and save data
+
+				Session hibernateSession = FactoryProvider.getFactory().openSession();
+
+				Transaction tx = hibernateSession.beginTransaction();
+				int userId = (int) hibernateSession.save(user);
+				
+				tx.commit();
+				hibernateSession.close();
+
+				out.println("Successfully saved");		
+				out.println("<br> User Id is" +userId);							//Print message
+
+			} catch(Exception e) {
+				e.printStackTrace();	//prints on console	
+			}
+		
+
+	}
+}
+}

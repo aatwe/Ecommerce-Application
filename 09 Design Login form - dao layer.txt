@@ -1,0 +1,258 @@
+Q) Why using hibernate? avoid database coding
+
+Objective: Authenticate user:
+	login -> servlet -> authenticate-> 
+
+
+
+a.1) Create LoginServlet -> add info to deployment descriptor (xml map) --> Finish'
+
+a.2) How to send form from login.jsp to servlet LoginServlet.java ? copy url pattern for LoginServlet from web.xml to login.jsp form 
+
+<form action="LoginServlet" method="post">
+
+can check in web.xml
+
+(servlet-mapping)
+(servlet-name>LoginServlet<lservlet-name)
+(url-pattern>/LoginServ1e§(/ur1-pattern)
+
+(/servlet-mapping>
+
+a.3) fetch data from login form to servlet
+
+	a.3.1) request object -> getParameter()
+			//pass form field names 
+
+
+a.4) do validations	//later
+
+a.5) do authentication
+	a.5.1) instead of writing all code here, we create a layer (dao layer) (Data access objects) (Database layer)
+
+	a.5.2) Source packages -> userDao : com.learn.mycart.dao -> Finish		//What this package will contain? all database classes 
+
+	a.5.3) User dao:  needs SessionFactory for doing operations
+
+		a.5.3.1) create SessionFactory object  //why sessionFactory? data base operations
+				private SessionFactory factory;
+				Create UserDao() constructor	
+
+
+		a.5.3.2) get user by email and password
+				1) Create Query in HQL in try block. WHy? hibernate uses hql
+						String guery="From User where userEmail =: e and userpassword=: p";
+						e contains username, p contains passwor
+				2) Create openSession //Store in object of type Session
+				3) Create Query		//Store in object q of type  Query
+				4) setparamter e: email in query q		//email we get from form
+				5) setparamter p: password in query q 		//password we get from form
+	
+				6) Fire Query : Query object q method uniqueResult // if single use uniqueResult -> Store in type User
+													  //if multiple : use list
+
+				//if any error in this try block processing , catch and print to stacktrace
+
+				7) Note try catch is inside User Type method : getUserByEmailAndPassword
+					takes argument email and password
+					after getting email and password in servlet -> we will call this method
+					If this method returns the User or Null
+
+
+				public User getUserByEmailAndPassword(String email, String password)
+				{
+					User user = null;
+				}
+		
+				try {
+					String guery="From User where userEmail =: e and userpassword=: p";
+					Session openSession = this.factory.openSession();
+					Query q = session.createQuery(query);
+					q.setParameter("e", email);	
+					q.setParameter("p", password);	
+					user = (User)q.uniqueResult();			
+
+					session.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+			 	}
+
+
+
+				return user
+
+
+
+		a.5.3.3) Call getUserByEmailAndPassword(String email, String password) using UserDao object (why? non static method)
+				in LoginServlet.java
+
+				how to call? call UserDao constructor //initialize this.factory
+				
+
+				UserDao userDao = new UserDao(FactoryProvider.getFactory());
+				
+				pass email and password into getUserByEmailAndPassword(email, password);
+
+				this returns user, store in User type user
+		
+			
+		a.5.3.4) Check what received in User user -> Run
+
+				Login -> Enter email and password used while registering
+				Window -> Output -> Check console //can see userId,userName,userEmail... for the loginner
+	
+				User{userId=2. userName=mearL userEmail=duraeshkumar30580mail.com. userPassword=durqesh. userPhone=123		
+
+				Login -> Enter incorrect email and password
+				Window -> Output -> null
+
+			based on this add code:  //use user method getUserName()
+				if(user == null) {
+					out.println("<h1>Invalid details </h1>");
+				}else 
+				{
+					out.println("<h1>Welcome "+ user.getUserName() + " </h1>");
+				}
+
+		TEST: -> Refresh run correct entries -> Welcome 	Durgesh Tiwari
+					    incorrect  	 	-> Invalid details
+		//Authentication is done
+
+
+		a.5.3.5) Send message nicely: create httpsession -> use.setAttribute()
+				//setAttribute will take key message which refers message.
+	
+			<%@include file= "components/message.jsp" %> in login.jsp
+			HttpSession httpSession = request.getSession();
+
+			httpSession.setAttribute("message", "Registration SuccessFul I! User id is " + userId);
+			response.sendRedirect("register.jsp");
+
+			return;
+
+
+			if(user == null) {
+					out.println("<h1>Invalid details </h1>");
+					httpSession.setAttribute("message", "Invalid details!! Try with another one");
+					response.sendRedirect("login.jsp");	
+					return;
+				}else {
+					out.println("<h1>Welcome "+ user.getUserName() + " </h1>");
+	
+				}
+
+
+		What flow? 
+			a) fetch email and password in Loginservlet.java
+				String email = request.getParameter("email");
+				String passMord = request.getParameter("password");
+
+			b) user dao object created
+				UserDao userDao = new UserDao(FactoryProvider.getFactory());
+
+			c) call method , verify user 
+				User user = userDao.getUserBy%mailAndPassword(email, password);
+					-> if found -> return details
+					   else     -> return null
+
+		a.5.3.5) Check database sqlyog
+				mycart
+				 tables
+				  user : ID and password
+-------------------------------------------------------------------------------------
+LoginServlet.java
+
+package com.learn.mycart.servlets;
+import java.io.IOException;
+
+import java.io.Printwriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServ1et;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class LoginServlet extends HttpServlet {
+lprotected void progessRequest(HttpServletRequest request, HttpServletResponse response)
+throws ServletException, IOException {
+response.setContentType("text/html;charset=UTF-8");
+try (Printwriter out = response.getwriter()) {
+
+	String email = request.getParameter("email");
+	String password = request.getParameter("password");
+
+	//validations
+
+	//authenticating user
+	UserDao userDao = new UserDao(FactoryProvider.getFactory());
+	User user = userDao.getUserByEmailAndPassword(email, password);
+	System.out.println(user);
+
+
+	HttpSession httpSession = request.getSession();
+
+
+				if(user == null) {
+					out.println("<h1>Invalid details </h1>");
+					httpSession.setAttribute("message", "Invalid details!! Try with another one");
+					response.sendRedirect("login.jsp");	
+					return;
+				}else 
+				{
+					out.println("<h1>Welcome "+ user.getUserName() + " </h1>");
+	
+				}
+
+
+}}
+
+}
+--------------------------------------------------------------------------------------
+login.jsp
+
+<%@include file= "components/message.jsp" %>
+
+(form action="LoginServlet" method="post">
+(div class="form-group">
+(label for="exampleInputEmaill">Email address(/1abel>
+(input name="email" type="email" class="torm-con rol" id="exampleInputEmaill" aria—desc
+(small id="emailHelp" class="form—text text-muted">We'll never share your email with any
+(/div>
+
+(div class="form-group">
+(label for:"exampleInputPasswordl">Password(/label>
+(input name="password" type="password" class="form-control" id="exampleInputPasswordl"
+(/div>
+
+(a href="register.jsp" class="text-center d-block mb-2"> if not registered click here (/a>
+(div class="container text-center">
+(button type=flsubmit" class="btn btn—primary border—9 custom—bg ">Submit(/button>
+(button type="reset" class="btn btn-primary custom-bg border-9 ">Reset(/button>
+(/div>
+
+</form>
+
+--------------------------------------------------------------------------------------
+UserDao.java
+
+package com.learn.mycart.dao;
+import org.hibernate.SessionFactory;
+
+public class UserDao {
+	private SessionFactory factory;
+
+	public UserDao(SessionFactory factory) {
+	this.Factory = factory;
+}
+
+public User getUserByEmailAndPassword(String email, String password)
+{
+	User user = null;
+try {
+
+}catch (Exception e) {
+	e.printStackTrace();	//for error handling
+}
+
+return user
+}

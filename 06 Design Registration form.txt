@@ -1,0 +1,118 @@
+Q) Why jsp? easy to create user views = html + java
+
+
+Objective: Design registration form
+
+
+Registration form:
+
+a) Navbar		//Bootstrap component
+
+
+a.1) in components folder -> navbar.jsp -> paste code
+//what advantage? if want to use this component in index.jsp --> <%@include file="components/navbar.jsp" %>
+
+//Navbar conatins: Title/Home/Link/Dropdown / Searchbar /Search button
+
+a.2) Make changes in Navbar.js
+	
+		add div container to give padding + bring in centre
+		Change title
+		Add categories in drop down
+		remove disabled
+		bring search bar in middle <form> </form>
+		add buttons
+		How to give background color to navbar? material color: material ui
+			in styles.css
+			.custom-bg {
+				background: #673ab7!important;
+			}
+
+<div c1ass="collapse navbar-collapse" id="navbarSupportedContent">			
+</ul>
+<li c1ass="nav-item active">
+
+<a c1ass="nav—link" href="login.jsp">Login </a>		 <-href leads to login.jsp page->
+</li>
+<li c1ass="naV—item active">
+
+<a c1ass="nav—link" href="register.jsp">Register </a>  <-href leads to login.jsp page->
+</li>
+
+</ul>
+</div>
+
+
+a.3) Create Register.js
+
+	a.3.1) include common_css_js.jsp
+	a.3.2) include navbar.jsp
+	a.3.3) get form from bootstrap -> paste in register.jsp	//Username,email,pw,phone,address text field is designed
+	a.3.4) create submit button in div container			//Register and Reset button  //text-center to bring container to centre
+				
+	a.3.5) how to keep everything inside a card?
+			put h3 and form inside
+
+			<div class="card">
+				<div class"cardd-body">
+
+				</div>
+			</div>
+
+
+<div class="card">
+<div class"cardd-body">
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+(html)
+<head>
+(meta http—equiv="Content—Type" content="text/html; charset=UTF-8">
+<title>New User(/title>
+	<%@include file="components/common_css_js.jsp" %>
+</head>
+<body>
+	<%@inc1ude file="components/navbar.jsp" %>
+
+
+<div class="row">
+<div c1ass="col-md—4 offset—md-4">
+
+<div class="card">
+<div class"cardd-body px-5">
+<h3 class="text-center my-3"> Sign up here </h3>
+
+<form>
+	<div class="form-group">
+		<label for="name">User Name</labe1>
+		<input type="text" c1ass="form-control" id="name" placeholder="Enter here" aria-describedby="emailHelp")
+	</div>
+	<div class="form-group">
+		<label for="email">User Email</labe1>
+		<input type="email" c1ass="form-control" id="email" placeholder="Enter here" aria-describedby="emailHelp")
+	</div>
+	<div class="form-group">
+		<label for="password">User Email</labe1>
+		<input type="password" c1ass="form-control" id="password" placeholder="Enter here" aria-describedby="emailHelp")
+	</div>
+	<div class="form-group">
+		<label for="phone">User Phone</labe1>
+		<input type="number" c1ass="form-control" id="phone" placeholder="Enter here" aria-describedby="emailHelp")
+	</div>
+	<div class="form-group">
+		<label for="phone">User Email</labe1>
+		<textarea style="height: 200px" class="form-control" placeholder="Enter your address"> </textarea>
+	</div>
+	
+	<div class="container" text-center>
+		<button class = "btn btn-outline-success"> Register </button>
+		<button class = "btn btn-outline-warning"> Reset </button>
+
+	</div>
+
+</form>
+		</div>
+	</div>
+</div)
+</body>
+</html>

@@ -1,0 +1,47 @@
+Objective:
+
+a) E commerce website
+
+b) can filter products categorywise
+
+c) What user can do?
+		add products incart (multiple times)
+		remove products from cart
+		checkout button
+			disable if cart empty
+d) cart button accessible from all pages
+
+e) Login feature
+
+f) admin login feature
+	Users, Products, categories, 
+	Add new product , Add new category
+
+
+------------------------------------------------	
+		
+Prerequisites:
+
+Java
+JDBC
+Servlet JSP    (backend)
+HTML ,CSS, 	(frontend)
+JS  (client side programming: cards etc)
+bootstrap (Styling)
+
+
+Hibernate (Database) : uses jdbc internally
+Used fo persistent logic : saving objects in database
+
+Why hibernate? dont have to write SQL queries
+
+
+Softwares: Java 11,Netbeans(more feat),Tomcat(8,9),MySQL(Database),SqlYog(Gui access)
+
+
+
+		
+ 
+
+
+

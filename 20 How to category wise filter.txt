@@ -1,0 +1,120 @@
+a.1) whenever category clicked -> send category id into url  
+
+in Index.jsp:
+
+<a href="index.hsp?category=<%= c.getCategoryId()%>" class="list-group-item list-
+
+<% }
+%>
+
+for ex if clicked first category in form
+URL = localhost8181/mycart/Index.jsp?category=1
+
+//Note: for All products button use 
+<a href="index.hsp?category=all"class="list-group-item list-group-item-action />
+
+a.2) Now that we have category in url, we can fetch this in Index.jsp 
+	String cat=request.getParameter("category");
+
+	Create List of Product list
+
+	a.2.1) if this cat  = all --> get all the products
+
+	a.2.2) else : convert string to int //since int characterId in Category.java is int
+				//trim to remove white space
+
+	
+Index.jsp
+<%
+String cat=request.getParameter("category");
+	 //out.println(cat); 
+
+
+ProductDao dao = new ProductDao(FactoryProvider.getfactory());
+List<Product> list = null;
+
+if(cat.trim().equals("all"))
+{
+	list = dao.getAllProducts();
+	}
+	else{
+	  int cid =Integer.parseInt(cat.trim())	//since categoryId is int , convert string to int
+	 list = dao.getAllProductsById(cid);
+		//traverse this list
+ 	}
+}
+
+
+CategoryDao cdao = new CategoryDao(FactoryProvider.getfhctory());
+List<Category> clist = cdao.getCategories();
+
+%>
+
+		 How to load product data according to cid?
+		
+		a.2.2.1) Create function getProductByCategoryId()	 	//have to call from productDao	
+				Create session object s -> open sesion using factory
+				Create query: apply ccondition: from Product as p  where p.category.categoryId =:id
+				put cid value in query
+					query.setPaameter("id", cid	)	//what will queryreturn? all products in given category
+				get output in list form from query
+				return list		
+	
+
+public List<Product> getAllProductsId() {
+	Session s   = this.factory.openSession();
+	Query query = s.createQuery("from Product as p  where p.category.categoryId =:id");
+	query.setPaameter("id", cid	)
+	List<Product> list = query.1ist();
+	return list;
+
+}
+
+	a.2.3) 
+			 
+
+
+
+
+a.3) TEST:
+
+	if click All products -> All products come
+	if click mobile phones -> mobile category products come	
+
+
+a.4) if you dont find category product -> print no found
+
+add below in Index.jsp
+
+<%
+ if(list.size() == 0) {
+	out.println("No item in this cate");
+} 
+
+%>
+
+
+
+a.5) What if catId passed null --> i.e localhost8181/mycart/index.jsp
+
+String cat is null
+
+null.trim() --> null pointer exception
+
+
+add another condition:
+
+if (cat==null || cat.trim().equals("all")) {
+  list = dao.getAllProducts();
+} 
+
+
+localhost8181/mycart/index.jsp will also show all products
+
+
+
+a.6) How to limit all products in pages? Pagination component
+In index.jsp	 
+
+
+ 

@@ -1,0 +1,303 @@
+a.1) Where is the add category form? admin.jsp
+	a.1.1) add action in form -> send this form data to ProductOperationServlet using post method
+		//using post method : data will not go into url, can send more data		
+
+	a.1.2) How will we add product and category? 1 servlet
+
+
+a.2) Create ProductOperationServlet	 //add info to deployment descriptor //url pattern should match in action
+
+	a.2.1)processrequest is a custom method //this method is called by deGet() and doPost().if processRequest not visible, can still work via doGet() or doPost()
+
+	a.2.2) How will we send form data to database? ProductOperationServlet -> 	processRequest() -> try{}
+
+		a.2.2.1) 
+	
+		a.2.2.2) what is ProductoperationServlet's job? Add category + Add Product
+
+			a.2.2.2.1)How will servlet identify if category to be added or Product to be added
+				Send useful data from form to identify?
+
+				a.2.2.2.1.0) Get operation flag from form , store in op	//sets respective if else block to true
+
+				a.2.2.2.1.1) create  hidden field input type in form, this field will go into form	
+							<input type="hidden" name="operation" value="addCategory">			
+
+				a.2.2.2.1.2) fetch the hidden operation field in Servlet				
+							if field found = add cateogry -> Add category operation
+								1)	fetch fields: catTitle ,catDescription from Form
+									how to fetch fields from form to Servlet? request.getParameter("fieldname")
+								
+									create Category type object. How? Category() default constructor
+										//from Category class : call setters: setCategoryTitle(title)
+																	setCategoryDescription(description)
+										//category obejct created -> contains : title and description
+
+								2)    Store fetched fields into database
+									How to store in database? either hibernate directly or daolayer
+							else if field found = add product -> Add product operation
+
+			a.2.2.3) Create category Dao in Source Packages -> com.learn.mycart.dao
+					==> new java class: CategoryDao
+				a.2.2.3.1) create method saveCategory(Category cat)
+							how will it save to DB? using factory , what will it return? categoryId
+						1)	open session	//get HIbernate session
+								Session session = this.factory.openSession();
+						2)   open transaction
+								Transaction tx = session.beginTransaction();
+						3)   Save session , returns catId
+							//once catId returned implies data saved
+
+						4) 	Commit transaction
+								tx.commit();
+
+						5)    close session
+						6)	return catId
+					//Note: not necessary to create Dao --> we following a design pattern
+					maintaining layers is good for understanding. Helps when moving to frameworks
+					for ex if we would have used jdbc -> factorpriver,servlets, tables.java would remain same
+						only dao classes would change, use jdbc in dao classes
+					//Only dao layer changes for 
+					//LOOSELY COUPLED
+
+
+			a.2.2.4) Call saveCategory() from ProductOperationServlet	
+					//since non static, have to create object	
+					CategoryDao() constructor takes : FactoryProvider.getFactory()); 
+					//factory initialized for CategoryDao class member variable SessionFactory factory
+					//data will be saved using this factory object
+					//print Category saved
+					//try printing catId also	 
+
+			a.2.2.5) Test 
+					Note: whenever you change  servlet -> session expire
+						Login as admin
+						Add category details
+						Enter title: Laptops
+						Enter description: this category contains different types of laptop
+						=> Add category
+
+				>Output: category saved
+
+
+			a.2.2.6) Check database:
+					SQLYog
+						mycart
+						  category -> Open table in new tab
+
+				   Can see category Id 	categoryDescription							categoryTitle
+					         1			This category contains different types of laptops 	Laptops
+			a.2.2.7) import message.jsp in admin.jsp
+
+				    How to send message back?
+					ProductOperationServlet.java
+
+
+				HttpSession httpSession =  request.getSession();	//note this is http session
+				httpSession.setAttribute("message","Category added successfully");
+				response.sendRedirect("admin.jsp");
+				return;
+
+			a.2.2.8) Test again
+					Email:	//admin
+					Password:
+
+					Add category -> Mobile Phones: Contains all latest phones-> click add category button
+
+				Output:Category added successfully	//in admin.jsp page we get the message
+			//since message removed from session:  if we refresh -> message will be removed
+
+
+
+		//Note: if want to use JDBC just query firing method will change
+		for ex
+		String query="ircm User where userEmail =: e and userPasswordzz p";
+		Session session = this.factory.open$ession();
+
+		Query q = session.createQuery(query):
+
+		q.setParameter("e", email);
+
+		q.setParameter("p",password);
+
+		user=(User) q.uniqueResult();
+
+		session.close();
+------------------------------------------------------------------------------------------------
+Code:
+Admin.jsp
+
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+( !DOCTYPE html>
+(html>
+<head>
+(meta http-equiv="Content-Type" content="text/html; charset=UTF—8">
+<title>Admin Pane1(/title>
+<%@include Fi1e="components/common_css_js.jsp" %>
+</head>
+<body>
+<%@include File="components/navbar.jsp" %>
+
+
+<div class="container admin">
+
+  <div class="container-fluid">
+	<%include file="components/message.jsp" %>		
+</div>
+  </div>
+  <div class="row mt-3">
+
+	<div class="col-md-4">
+		
+		<div class="card">
+		
+			<div class="card-body text-center">
+
+			<div class="container">
+			  <img style="max-width : 125px;" class="img-fluid" src="img/seo-and-web.png" alt
+			</div>
+				<h1>2342</h1>
+				<h1>Users</h1>
+			</div>
+	
+		</div>
+	</div>
+
+	<div class="col-md-4">
+
+
+
+//Button Trigger Modal
+
+			<div class="card" data—toggle="modal" data—target:"#add—catégory-modal"	//specify id of which modal to open from button
+		
+			<div class="card-body text-center">
+				<div class="container">
+			  		<img style="max-width : 125px;" class="img-fluid" src="img/list.png" alt
+				</div>
+				<h1>2342</h1>
+				<h1>Category</h1>
+			</div>
+	
+		</div>
+
+	<div>
+
+	<div class="col-md-4">
+
+		<div class="card">
+		
+			<div class="card-body text-center">
+			<div class="container">
+			  <img style="max-width : 125px;" class="img-fluid" src="img/product.png" alt
+				</div>
+				<h1>2342</h1>
+				<h1>Products</h1>
+			</div>
+	
+		</div>
+
+	</div>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+ 	<div class="modal-dialog" role="document">
+    	<div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+ 
+		<form action="ProductOperationSServlet" method="post">
+
+			<input type="hidden" name="operation" value="addcategory">
+
+			<div class="form-group">
+				<input type="text" class="form-control" name="catTitle" placeholder="Enter category title" required />>	
+				</div>	
+
+				<div class="form-group">
+					<textarea style="height: 300px;"class ="form-control"placeholder = "Enter  category description" name ="categoryDescription" required> </textarea>
+				</div>
+				
+			</form>
+			<div class="container text-center">
+				<button class="btn btn-outline-success">Add category </button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+
+      </div>
+
+      <div class="modal-footer">
+     
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==
+ProductOperationServlet.java
+
+protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+throws ServletException, IOException d
+response.setContentType("text/html;charset:UTF—8");
+try (PrintWriter out = response.getWriter()){
+
+
+	String op = request.getParameter("operation");		//Flag from form
+
+	if(op.trim().equals("addcategory"))
+	{
+		//add category	
+			String title = request.getParameter("catTitle");
+			String description = request.getParameter("catDescription") 
+			Category category = new Category();
+			setCategoryTitle(title);
+			setCategoryDescription(description);
+
+		CategoryDao categoryDao = new CategoryDao(FactoryProvider.getFactory());
+
+		int catId = categoryDao.saveCategory(category);	
+		out.println("Category Saved");
+		HttpSession httpSession =  request.getSession();	//note this is http session
+		httpSession.setAttribute("message","Category added successfully");
+		response.sendRedirect("admin.jsp");
+		return;
+	
+	}
+	else if(op.trim().equals("add product"))
+	{
+		//add product
+	}	
+ }
+}
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+package com.learn.mycart.dao;
+flimport org.hibernate.SessionFactory;
+public class CategoryDao {
+private SessionFactory factory;	
+ public CategoryDao(SessionFactory factory) {
+	this.factory = factory;
+}
+
+
+//save the category to DB
+public boolean saveCategory(Category cat)
+{
+	Session session = this.factory.openSession();
+	Transaction tx = session.beginTransaction();
+
+	int catId = (int)session.save(cat);
+
+	tx.commit();
+	session.close();
+	return catId;	
+}
